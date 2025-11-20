@@ -29,7 +29,7 @@ class InsuranceInput(BaseModel):
     region_northeast: int = Field(..., ge=0, le=1)
     region_northwest: int = Field(..., ge=0, le=1)
     region_southeast: int = Field(..., ge=0, le=1)
-    region_southwest: int = Field(..., ge=0, le=1)
+    # Removed region_southwest to match the trained model
 
 # Define a POST endpoint for prediction
 @app.post("/predict")
@@ -38,7 +38,7 @@ def predict_insurance_cost(data: InsuranceInput):
     sex = 1 if data.sex == "male" else 0
     smoker = 1 if data.smoker == "yes" else 0
 
-    # Prepare the feature array in the correct order
+    # Prepare the feature array in the correct order (8 features)
     features = np.array([[
         data.age,
         sex,
@@ -47,8 +47,7 @@ def predict_insurance_cost(data: InsuranceInput):
         smoker,
         data.region_northeast,
         data.region_northwest,
-        data.region_southeast,
-        data.region_southwest
+        data.region_southeast
     ]])
 
     # Make prediction
